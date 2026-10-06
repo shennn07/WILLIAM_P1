@@ -1,5 +1,6 @@
 <?php
 require_once 'database.php';
+session_start();
 
 $sql = 
 "SELECT users.*,
@@ -49,14 +50,38 @@ if (mysqli_num_rows($result) > 0) {
                     <a class="nav-link active" aria-current="page" href="daftar_user.php">Daftar User</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="form.php">Form</a>
+                    <a class="nav-link" href="form_tambah_user.php">Form</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="daftar_mapel.php">Daftar mapel</a>
                 </li>
             </ul>
         </div>
+        <div class="dropdown">
+    <button class="btn btn-secondary dropdown-toggle"
+            type="button"
+            id="dropdownMenuButton"
+            data-bs-toggle="dropdown"
+            aria-expanded="false">
+        AKUN
+    </button>
+
+    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+    <span class="dropdown-item-text">
+        Nama:
+        <?php echo htmlspecialchars($_SESSION['nama']); ?>
+    </span>
+
+    <span class="dropdown-item-text">
+        Role:
+        <?php echo htmlspecialchars($_SESSION['role']); ?>
+    </span>
+    <span class="dropdown-item-text">
+        <a href="proses_logout.php" class="btn btn-sm btn-outline-danger mt-2">Logout</a>
+    </span>
+</div>
     </div>
+</div>
 </nav>
 
 <main class="container py-5">

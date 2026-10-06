@@ -43,7 +43,7 @@ if (mysqli_num_rows($result) > 0) {
                     <a class="nav-link active" aria-current="page" href="daftar_mapel.php">Daftar mapel</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="form_mapel.php">Form Mapel</a>
+                    <a class="nav-link" href="form_tambah_mapel.php">Form Mapel</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="daftar_user.php">Daftar user</a>
