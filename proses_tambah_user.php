@@ -39,7 +39,7 @@ if (mysqli_query($koneksi, $sqluser)) {
         }
     }
 
-    header("Location: daftar_user.php");
+    header("Location: form_login.php");
     exit();
 
 } else {

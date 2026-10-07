@@ -5,7 +5,7 @@ session_start();
 $sql = 
 "SELECT
     guru.id AS id_guru,
-    users.username,
+    users.*,
     guru.nama,
     guru.nip,
     mapel.nama_mapel
@@ -47,7 +47,7 @@ if (mysqli_num_rows($result) > 0) {
         <div class="collapse navbar-collapse" id="navbarMenu">
             <ul class="navbar-nav ms-auto">
                 <li class="nav-item">
-                    <a class="nav-link active" aria-current="page" href="daftar_user.php">Daftar User</a>
+                    <a class="nav-link active" aria-current="page" href="daftar_guru.php">Daftar Guru</a>
                 </li>
             </ul>
         </div>
@@ -62,8 +62,8 @@ if (mysqli_num_rows($result) > 0) {
 
     <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
     <span class="dropdown-item-text">
-        Nama:
-        <?php echo htmlspecialchars($_SESSION['nama']); ?>
+        user:
+        <?php echo htmlspecialchars($_SESSION['username']); ?>
     </span>
 
     <span class="dropdown-item-text">
@@ -84,8 +84,8 @@ if (mysqli_num_rows($result) > 0) {
         <div class="card-header bg-white p-4">
             <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3">
                 <div>
-                    <h2 class="h4 mb-1">Daftar User</h2>
-                    <p class="text-secondary mb-0">Data akun pengguna yang terdaftar di sistem.</p>
+                    <h2 class="h4 mb-1">Daftar Guru</h2>
+                    <p class="text-secondary mb-0">Data guru yang terdaftar di sistem.</p>
                 </div>
 
 
@@ -119,9 +119,10 @@ if (mysqli_num_rows($result) > 0) {
                                         <?php echo $item["mapel_guru"] ?? '<span class="text-secondary fst-italic">Belum ada mapel</span>'; ?>
                                     </td>
                                     <td>
-                                        <a href="form_edit_guru.php?id=<?php echo $item["id_guru"]; ?>" class="btn btn-sm btn-outline-primary">Edit</a>
-                                        <a href="proses_hapus_guru.php?id=<?php echo $item["id_guru"]; ?>" class="btn btn-sm btn-outline-danger" onclick="return confirm('Apakah Anda yakin ingin menghapus guru ini?')">Hapus</a>
-                                </tr>
+                                        <a href="form_edit_user.php?id=<?php echo $item["id"]; ?>&role=<?php echo $item["role"]; ?>" class="btn btn-sm btn-outline-primary">Edit</a>
+                                        <a href="proses_hapus_user.php?id=<?php echo $item["id"]; ?>" class="btn btn-sm btn-outline-danger" onclick="return confirm('Apakah Anda yakin ingin menghapus user ini?')">Hapus</a>
+                                    </td>
+                                    </tr>
                             <?php } ?>
 
                         <?php } else { ?>

@@ -42,7 +42,7 @@
                 </div>
 
                 <div class="card-body p-4">
-                    <form action="proses.php" method="POST">
+                    <form action="proses_tambah_user.php" method="POST">
 
                         <!-- Data Profil Siswa -->
                         <h3 class="h5 mb-4">Data Profil Siswa</h3>

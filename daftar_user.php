@@ -68,8 +68,8 @@ if (mysqli_num_rows($result) > 0) {
 
     <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
     <span class="dropdown-item-text">
-        Nama:
-        <?php echo htmlspecialchars($_SESSION['nama']); ?>
+        user:
+        <?php echo htmlspecialchars($_SESSION['username']); ?>
     </span>
 
     <span class="dropdown-item-text">
