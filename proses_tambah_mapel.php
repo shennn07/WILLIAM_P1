@@ -1,6 +1,15 @@
 <?php
-
 require 'database.php';
+session_start();
+
+if (!isset($_SESSION['id'])) {
+    header("Location: form_login.php");
+    exit;
+
+} elseif (($_SESSION['role'] ?? '') !== 'admin') {
+    http_response_code(403);
+    exit("Akses ditolak. Halaman ini hanya untuk admin.");
+}
 
 $kode_mapel = $_POST['kode_mapel'];
 $nama_mapel = $_POST['nama_mapel'];

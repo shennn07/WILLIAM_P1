@@ -2,6 +2,15 @@
 require_once 'database.php';
 session_start();
 
+if (!isset($_SESSION['id'])) {
+    header("Location: form_login.php");
+    exit;
+
+} elseif (($_SESSION['role'] ?? '') !== 'siswa') {
+    http_response_code(403);
+    exit("Akses ditolak. Halaman ini hanya untuk siswa.");
+}
+
 $sql = 
 "SELECT
     siswa.id AS id_siswa,
@@ -101,7 +110,6 @@ if (mysqli_num_rows($result) > 0) {
                             <th>nama</th>
                             <th>nis</th>
                             <th>kelas</th>
-                            <th>Aksi</th>
                         </tr>
                     </thead>
 
@@ -116,10 +124,6 @@ if (mysqli_num_rows($result) > 0) {
                                     <td><?php echo $item["nis"]; ?></td>
                                     <td>
                                         <?php echo $item["kelas"] ?? '<span class="text-secondary fst-italic">Belum ada kelas</span>'; ?>
-                                    </td>
-                                    <td>
-                                        <a href="form_edit_user.php?id=<?php echo $item["id"]; ?>&role=<?php echo $item["role"]; ?>" class="btn btn-sm btn-outline-primary">Edit</a>
-                                        <a href="proses_hapus_user.php?id=<?php echo $item["id"]; ?>" class="btn btn-sm btn-outline-danger" onclick="return confirm('Apakah Anda yakin ingin menghapus user ini?')">Hapus</a>
                                     </td>
                                 </tr>
                             <?php } ?>

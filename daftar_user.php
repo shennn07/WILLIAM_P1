@@ -2,6 +2,15 @@
 require_once 'database.php';
 session_start();
 
+if (!isset($_SESSION['id'])) {
+    header("Location: form_login.php");
+    exit;
+
+} elseif (($_SESSION['role'] ?? '') !== 'admin') {
+    http_response_code(403);
+    exit("Akses ditolak. Halaman ini hanya untuk admin.");
+}
+
 $sql = 
 "SELECT users.*,
 COALESCE(siswa.nama, guru.nama) AS nama_pengguna,
@@ -55,6 +64,9 @@ if (mysqli_num_rows($result) > 0) {
                 <li class="nav-item">
                     <a class="nav-link" href="daftar_mapel.php">Daftar mapel</a>
                 </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="daftar_mengajar.php">Daftar mengajar</a>
+                </li>
             </ul>
         </div>
         <div class="dropdown">
@@ -106,7 +118,6 @@ if (mysqli_num_rows($result) > 0) {
                             <th>ID</th>
                             <th>Username</th>
                             <th>Role</th>
-                            <th>Password</th>
                             <th>Nama Pengguna</th>
                             <th>Mapel</th>
                             <th>Aksi</th>
@@ -126,9 +137,6 @@ if (mysqli_num_rows($result) > 0) {
                                             <?php echo $item["role"]; ?>
                                         </span>
                                     </td>
-
-                                    <td><?php echo $item["password"]; ?></td>
-
                                     <td>
                                         <?php
                                         echo $item["nama_pengguna"]
@@ -137,7 +145,7 @@ if (mysqli_num_rows($result) > 0) {
                                         ?>
                                     </td>
                                     <td>
-                                        <?php echo $item["mapel_guru"] ?? '<span class="text-secondary fst-italic">Belum ada mapel</span>'; ?>
+                                        <?php echo $item["mapel_guru"] ?? '<span class="text-secondary fst-italic">-</span>'; ?>
                                     </td>
                                     <td>
                                         <a href="form_edit_user.php?id=<?php echo $item["id"]; ?>&role=<?php echo $item["role"]; ?>" class="btn btn-sm btn-outline-primary">Edit</a>

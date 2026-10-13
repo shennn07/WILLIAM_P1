@@ -1,5 +1,15 @@
 <?php
 require_once 'database.php';
+session_start();
+
+if (!isset($_SESSION['id'])) {
+    header("Location: form_login.php");
+    exit;
+
+} elseif (($_SESSION['role'] ?? '') !== 'admin') {
+    http_response_code(403);
+    exit("Akses ditolak. Halaman ini hanya untuk admin.");
+}
 
 $sql = 
 "SELECT mapel.*, guru.nama AS nama_guru
@@ -43,13 +53,39 @@ if (mysqli_num_rows($result) > 0) {
                     <a class="nav-link active" aria-current="page" href="daftar_mapel.php">Daftar mapel</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="form_tambah_mapel.php">Form Mapel</a>
+                    <a class="nav-link" href="form_tambah_mapel.php">Form</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="daftar_user.php">Daftar user</a>
                 </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="daftar_mengajar.php">Daftar mengajar</a>
+                </li>
             </ul>
         </div>
+        <div class="dropdown">
+    <button class="btn btn-secondary dropdown-toggle"
+            type="button"
+            id="dropdownMenuButton"
+            data-bs-toggle="dropdown"
+            aria-expanded="false">
+        AKUN
+    </button>
+
+    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+    <span class="dropdown-item-text">
+        user:
+        <?php echo htmlspecialchars($_SESSION['username']); ?>
+    </span>
+
+    <span class="dropdown-item-text">
+        Role:
+        <?php echo htmlspecialchars($_SESSION['role']); ?>
+    </span>
+    <span class="dropdown-item-text">
+        <a href="proses_logout.php" class="btn btn-sm btn-outline-danger mt-2">Logout</a>
+    </span>
+</div>
     </div>
 </nav>
 

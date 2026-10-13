@@ -1,6 +1,15 @@
 <?php
-
 require 'database.php';
+session_start();
+
+if (!isset($_SESSION['id'])) {
+    header("Location: form_login.php");
+    exit;
+
+} elseif (($_SESSION['role'] ?? '') !== 'admin') {
+    http_response_code(403);
+    exit("Akses ditolak. Halaman ini hanya untuk admin.");
+}
 
 if (isset($_GET['id'])) {
     $id = $_GET['id'];

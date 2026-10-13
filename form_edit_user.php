@@ -1,6 +1,16 @@
 <?php
-
 include 'database.php';
+session_start();
+
+if (!isset($_SESSION['id'])) {
+    header("Location: form_login.php");
+    exit;
+
+} elseif (($_SESSION['role'] ?? '') !== 'admin') {
+    http_response_code(403);
+    exit("Akses ditolak. Halaman ini hanya untuk admin.");
+}
+
 
 // cek apakah id dan role dikirim dari daftar_user.php
 if (!isset($_GET['id']) || !isset($_GET['role'])) {
