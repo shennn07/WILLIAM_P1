@@ -14,6 +14,7 @@ if (!isset($_SESSION['id'])) {
 $sql = 
 "SELECT users.*,
 COALESCE(siswa.nama, guru.nama) AS nama_pengguna,
+COALESCE(siswa.jenis_kelamin, guru.jenis_kelamin) AS jenis_kelamin,
 mapel.nama_mapel AS mapel_guru
 
 FROM users
@@ -119,6 +120,7 @@ if (mysqli_num_rows($result) > 0) {
                             <th>Username</th>
                             <th>Role</th>
                             <th>Nama Pengguna</th>
+                            <th>jenis kelamin</th>
                             <th>Mapel</th>
                             <th>Aksi</th>
                         </tr>
@@ -143,6 +145,9 @@ if (mysqli_num_rows($result) > 0) {
                                             ? $item["nama_pengguna"]
                                             : '<span class="text-secondary fst-italic">Belum ada profil</span>';
                                         ?>
+                                    </td>
+                                    <td>
+                                        <?php echo $item["jenis_kelamin"] ?? '<span class="text-secondary fst-italic">-</span>'; ?>
                                     </td>
                                     <td>
                                         <?php echo $item["mapel_guru"] ?? '<span class="text-secondary fst-italic">-</span>'; ?>

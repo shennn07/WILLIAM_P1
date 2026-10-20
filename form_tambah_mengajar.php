@@ -84,13 +84,11 @@ if (!isset($_SESSION['id'])) {
                                     <option value="">Pilih Mapel</option>
 
                                     <?php
-                                    $mapel_query = "
-                                        SELECT mapel.id, mapel.nama_mapel,
+                                    $mapel_query = "SELECT mapel.id, mapel.nama_mapel,
                                                guru.nama AS nama_guru
                                         FROM mapel
                                         JOIN guru ON mapel.guru_id = guru.id
-                                        ORDER BY mapel.nama_mapel
-                                    ";
+                                        ORDER BY mapel.nama_mapel";
 
                                     $mapel_result = mysqli_query($koneksi, $mapel_query);
 
@@ -117,12 +115,10 @@ if (!isset($_SESSION['id'])) {
                                     <option value="">Pilih Kelas</option>
 
                                     <?php
-                                    $kelas_query = "
-                                        SELECT DISTINCT kelas
+                                    $kelas_query = "SELECT DISTINCT kelas
                                         FROM siswa
                                         WHERE kelas IS NOT NULL AND kelas <> ''
-                                        ORDER BY kelas
-                                    ";
+                                        ORDER BY kelas";
 
                                     $kelas_result = mysqli_query($koneksi, $kelas_query);
 

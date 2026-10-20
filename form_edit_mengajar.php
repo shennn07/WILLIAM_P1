@@ -5,10 +5,8 @@ require_once 'database.php';
 if (!isset($_SESSION['id'])) {
     header("Location: form_login.php");
     exit;
-
-} elseif (($_SESSION['role'] ?? '') !== 'admin') {
-    http_response_code(403);
-    exit("Akses ditolak. Halaman ini hanya untuk admin.");
+} elseif ($_SESSION['role'] !== 'admin') {
+    exit("Akses ditolak.");
 }
 
 if (!isset($_GET['id'])) {
@@ -18,11 +16,42 @@ if (!isset($_GET['id'])) {
 
 $id = (int) $_GET['id'];
 
-$sql = "SELECT * FROM mengajar WHERE id = '$id' LIMIT 1";
-$result = mysqli_fetch_assoc(mysqli_query($koneksi, $sql));
+// DIUBAH: Mengambil data mengajar beserta kelasnya.
+$sql = "SELECT mengajar.*, siswa.kelas
+        FROM mengajar
+        JOIN siswa ON mengajar.siswa_id = siswa.id
+        WHERE mengajar.id = '$id'";
 
-if (!$result) {
+$query = mysqli_query($koneksi, $sql);
+
+if (!$query) {
+    exit("Data mengajar gagal dibaca.");
+}
+
+$data = mysqli_fetch_assoc($query);
+
+if (!$data) {
     exit("Data mengajar tidak ditemukan.");
+}
+
+$sql_mapel = "SELECT mapel.id, mapel.nama_mapel,
+                    guru.nama AS nama_guru
+             FROM mapel
+             JOIN guru ON mapel.guru_id = guru.id
+             ORDER BY mapel.nama_mapel";
+
+$result_mapel = mysqli_query($koneksi, $sql_mapel);
+
+// DIUBAH: Kelas ditampilkan sekali seperti form tambah.
+$sql_kelas = "SELECT DISTINCT kelas
+             FROM siswa
+             WHERE kelas IS NOT NULL AND kelas <> ''
+             ORDER BY kelas";
+
+$result_kelas = mysqli_query($koneksi, $sql_kelas);
+
+if (!$result_mapel || !$result_kelas) {
+    exit("Pilihan mapel atau kelas gagal dibaca.");
 }
 ?>
 
@@ -52,30 +81,27 @@ if (!$result) {
                 <div class="card-body">
                     <form action="proses_edit_mengajar.php" method="POST">
 
-                        <h3>Data Mengajar</h3>
+                        <input type="hidden"
+                               name="id"
+                               value="<?= $data['id'] ?>">
 
                         <label>Mata Pelajaran dan Guru:</label>
+
                         <select name="mapel_id" class="form-control" required>
-                            <option value="">Pilih Mapel</option>
-
                             <?php
-                            $mapel_query = "
-                                SELECT mapel.id, mapel.nama_mapel,
-                                       guru.nama AS nama_guru
-                                FROM mapel
-                                JOIN guru ON mapel.guru_id = guru.id
-                                ORDER BY mapel.nama_mapel
-                            ";
-
-                            $mapel_result = mysqli_query($koneksi, $mapel_query);
-
-                            while ($mapel = mysqli_fetch_assoc($mapel_result)) {
-                                $selected = ($mapel['id'] == $result['mapel_id'])
-                                    ? 'selected' : '';
+                            while ($mapel = mysqli_fetch_assoc($result_mapel)) {
                             ?>
-                                <option value="<?= $mapel['id'] ?>" <?= $selected ?>>
+                                <option value="<?= $mapel['id'] ?>"
+                                    <?php
+                                    // DIUBAH: Memakai if biasa agar mudah dibaca.
+                                    if ($mapel['id'] == $data['mapel_id']) {
+                                        echo 'selected';
+                                    }
+                                    ?>
+                                >
                                     <?= htmlspecialchars(
-                                        $mapel['nama_mapel'] . ' - ' . $mapel['nama_guru']
+                                        $mapel['nama_mapel'] . ' - ' .
+                                        $mapel['nama_guru']
                                     ) ?>
                                 </option>
                             <?php } ?>
@@ -83,36 +109,26 @@ if (!$result) {
 
                         <br>
 
-                        <label>Siswa dan Kelas:</label>
-                        <select name="siswa_id" class="form-control" required>
-                            <option value="">Pilih Siswa</option>
+                        <!-- DIUBAH: Memilih kelas, bukan siswa. -->
+                        <label>Kelas:</label>
 
+                        <select name="kelas" class="form-control" required>
                             <?php
-                            $siswa_query = "
-                                SELECT id, nis, nama, kelas
-                                FROM siswa
-                                ORDER BY kelas, nama
-                            ";
-
-                            $siswa_result = mysqli_query($koneksi, $siswa_query);
-
-                            while ($siswa = mysqli_fetch_assoc($siswa_result)) {
-                                $selected = ($siswa['id'] == $result['siswa_id'])
-                                    ? 'selected' : '';
+                            while ($kelas = mysqli_fetch_assoc($result_kelas)) {
                             ?>
-                                <option value="<?= $siswa['id'] ?>" <?= $selected ?>>
-                                    <?= htmlspecialchars(
-                                        $siswa['nis'] . ' - ' .
-                                        $siswa['nama'] . ' - ' .
-                                        $siswa['kelas']
-                                    ) ?>
+                                <option value="<?= htmlspecialchars($kelas['kelas']) ?>"
+                                    <?php
+                                    if ($kelas['kelas'] == $data['kelas']) {
+                                        echo 'selected';
+                                    }
+                                    ?>
+                                >
+                                    <?= htmlspecialchars($kelas['kelas']) ?>
                                 </option>
                             <?php } ?>
                         </select>
 
                         <br>
-
-                        <input type="hidden" name="id" value="<?= $result['id'] ?>">
 
                         <button type="submit" class="btn btn-primary">
                             Simpan
