@@ -58,6 +58,9 @@ if (mysqli_num_rows($result) > 0) {
                 <li class="nav-item">
                     <a class="nav-link active" aria-current="page" href="daftar_guru.php">Daftar Guru</a>
                 </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="daftar_kelas.php">Daftar kelas</a>
+                </li>
             </ul>
         </div>
         <div class="dropdown">
